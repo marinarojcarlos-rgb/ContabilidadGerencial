@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Papel Prensa S.A. · UADE 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,700&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --cream:#ede8df;
+  --ink:#0d0c0a;
+  --gold:#a87b0a;
+  --gold2:#c4940e;
+  --red:#9b2626;
+  --green:#175a31;
+  --body:#0e0d0b;
+  --sub:#181613;
+  --faint:rgba(13,12,10,.09);
+  --border:rgba(13,12,10,.13);
+}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);font-family:"DM Sans",sans-serif}
+#deck{position:relative;width:100vw;height:100vh}
+
+/* ── SLIDES ── */
+.slide{position:absolute;inset:0;display:grid;opacity:0;pointer-events:none;overflow:hidden;background:var(--cream)}
+.slide.active{opacity:1;pointer-events:all}
+
+/* ── ENTRY ANIMATIONS (JS-driven via .show class) ── */
+.a{opacity:0;transform:translateY(20px);transition:opacity .5s cubic-bezier(.2,1,.3,1),transform .5s cubic-bezier(.2,1,.3,1)}
+.a.show{opacity:1;transform:none}
+
+/* ── NAV ── */
+#nav{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:999;display:flex;align-items:center;gap:12px;background:rgba(13,12,10,.92);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.07);padding:7px 16px;border-radius:40px}
+.nb{background:none;border:none;cursor:pointer;font-size:15px;color:rgba(255,255,255,.3);padding:3px 7px;transition:color .2s}
+.nb:hover{color:#fff}.nb:disabled{color:rgba(255,255,255,.1);cursor:default}
+#nc{font-size:11px;letter-spacing:.2em;color:rgba(255,255,255,.25);min-width:42px;text-align:center}
+.dots{display:flex;gap:4px;align-items:center}
+.dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.2);cursor:pointer;transition:all .3s}
+.dot.on{background:var(--gold2);width:14px;border-radius:3px}
+.sn{position:absolute;top:22px;right:28px;font-size:11px;letter-spacing:.22em;color:rgba(13,12,10,.22)}
+
+/* ── GOLD BAR TOP ── */
+.topbar{position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold) 0%,transparent 65%)}
+
+/* ── TYPOGRAPHY ── */
+.kicker{font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:#111009;font-weight:400}
+.kicker-g{color:var(--gold2)}
+.display{font-family:"Cormorant Garamond",serif;font-weight:300;line-height:.92;letter-spacing:-.01em;color:var(--ink)}
+.display em{font-style:italic;color:var(--gold)}
+.body-t{font-size:14.5px;line-height:1.85;color:#0e0d0b;font-weight:300}
+.body-t strong{color:var(--ink);font-weight:500}
+.rule{width:36px;height:2px;background:var(--gold);margin:14px 0}
+.mono{font-family:"DM Mono",monospace}
+
+/* ── LAYOUTS ── */
+.l-cover{align-items:end;padding:0}
+.cover-inner{padding:56px 72px;position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center;height:100%}
+.cover-bg{position:absolute;right:-10px;bottom:-40px;font-family:"Cormorant Garamond",serif;font-weight:700;font-size:clamp(160px,26vw,340px);line-height:.85;color:rgba(13,12,10,.035);pointer-events:none;user-select:none}
+.l-story{grid-template-columns:1fr 1fr;align-items:center;padding:52px 0 52px 68px}
+.l-story .left{padding-right:48px}
+.l-story .right{border-left:1px solid var(--border);padding:0 48px;height:100%;display:flex;flex-direction:column;justify-content:center}
+.l-6040{grid-template-columns:1.3fr 1fr}
+.l-4060{grid-template-columns:1fr 1.3fr}
+.l-full{padding:52px 72px;align-content:center}
+.l-foda{grid-template-rows:auto 1fr;padding:40px 56px 48px;gap:0}
+.l-concl{padding:48px 72px;align-content:start}
+
+/* ── STAT ── */
+.stats{display:flex;gap:28px;margin-top:22px;flex-wrap:wrap}
+.stat{border-top:1px solid var(--border);padding-top:10px}
+.sl{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#111009;margin-bottom:4px}
+.sv{font-family:"Cormorant Garamond",serif;font-size:28px;font-weight:600;color:var(--ink);line-height:1}
+.sv.r{color:var(--red)}.sv.g{color:var(--gold)}.sv.gr{color:var(--green)}
+.pill{display:inline-flex;padding:3px 11px;border-radius:20px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-top:5px}
+.pill-r{background:rgba(155,38,38,.1);color:var(--red)}
+.pill-g{background:rgba(23,90,49,.1);color:var(--green)}
+.pill-au{background:rgba(168,123,10,.12);color:var(--gold)}
+
+/* ── BARS (JS-animated, NO CSS transitions) ── */
+.bar-row{margin-bottom:14px}
+.bar-meta{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
+.blbl{font-size:11px;color:#111009}
+.bval{font-family:"DM Mono",monospace;font-size:12px;color:#0a0908}
+.btrack{height:8px;background:rgba(13,12,10,.09);border-radius:3px;overflow:hidden}
+.bfill{height:100%;width:0;border-radius:2px}  /* width set by JS only */
+.bf-gold{background:var(--gold2)}
+.bf-red{background:var(--red)}
+.bf-green{background:var(--green)}
+.bf-gray{background:rgba(13,12,10,.28)}
+
+/* ── CASCADE EERR ── */
+.cascade{display:flex;flex-direction:column}
+.cr{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(13,12,10,.07);gap:16px}
+.crl{font-size:13px;color:#111009;flex:1;line-height:1.3}
+.crv{font-family:"DM Mono",monospace;font-size:12.5px;color:var(--ink);white-space:nowrap}
+.crv.r{color:var(--red)}.crv.g{color:var(--gold)}.crv.gr{color:var(--green)}
+.cr.bold .crl{color:var(--ink);font-weight:500;font-size:14px}
+.cr.bold .crv{font-weight:500}
+.cr.gap{margin-top:5px;padding-top:10px;border-top:1px solid rgba(13,12,10,.13)}
+
+/* ── ALERT BOX ── */
+.alert{padding:14px 18px;border-radius:3px;border-left:2px solid;font-size:13px;line-height:1.7;color:var(--ink)}
+.alert-r{background:rgba(155,38,38,.08);border-color:var(--red)}
+.alert-g{background:rgba(23,90,49,.08);border-color:var(--green)}
+.alert-au{background:rgba(168,123,10,.1);border-color:var(--gold)}
+.alert strong{color:var(--ink);font-weight:500}
+.alertbox{background:rgba(13,12,10,.88);border-left:2px solid var(--gold);padding:14px 18px;border-radius:0 3px 3px 0;font-size:13px;line-height:1.7;color:rgba(255,255,255,.82)}
+.alertbox strong{color:var(--gold2);font-weight:500}
+
+/* ── DONUT ── */
+.donut-wrap{display:flex;align-items:center;gap:22px;margin-top:12px}
+.donut{width:96px;height:96px;border-radius:50%;flex-shrink:0;background:conic-gradient(var(--gold) 0% 55.3%,var(--red) 55.3% 78.6%,rgba(155,38,38,.38) 78.6% 100%);mask:radial-gradient(circle at center,transparent 40%,black 40%);-webkit-mask:radial-gradient(circle at center,transparent 40%,black 40%)}
+.dl{display:flex;align-items:center;gap:7px;font-size:12px;color:#0e0d0b;margin-bottom:8px}
+.dlsw{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+
+/* ── DUPONT ── */
+.dp-box{padding:12px 10px;border-radius:3px;text-align:center}
+.dp-l{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#111009;margin-bottom:5px}
+.dp-v{font-family:"Cormorant Garamond",serif;font-size:30px;font-weight:700;line-height:1}
+.dp-r{background:rgba(155,38,38,.08);border:1px solid rgba(155,38,38,.22)}
+.dp-au{background:rgba(168,123,10,.07);border:1px solid rgba(168,123,10,.22)}
+
+/* ── ESP TABLE ── */
+.esp-t{font-family:"Cormorant Garamond",serif;font-size:17px;font-weight:600;color:var(--ink);padding-bottom:7px;border-bottom:1px solid var(--gold);margin-bottom:9px}
+.esp-r{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid rgba(13,12,10,.05);font-size:12px}
+.esp-l{color:#0e0d0b;flex:1;font-size:11.5px}
+.esp-v{font-family:"DM Mono",monospace;font-size:11px;color:var(--ink);white-space:nowrap}
+.esp-r.tot{border-top:1px solid rgba(168,123,10,.25);margin-top:4px;padding-top:7px}
+.esp-r.tot .esp-l{color:var(--ink);font-weight:500}
+.esp-r.tot .esp-v{color:var(--gold);font-weight:500}
+.esp-sec{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin:10px 0 5px}
+
+/* ── EFE ── */
+.efe-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:2px;margin-top:18px}
+.efe-b{padding:16px 14px}
+.efe-b1{background:rgba(155,38,38,.07);border-top:2px solid var(--red)}
+.efe-b2{background:rgba(155,38,38,.04);border-top:2px solid rgba(155,38,38,.3)}
+.efe-b3{background:rgba(23,90,49,.07);border-top:2px solid var(--green)}
+.efe-b4{background:rgba(13,12,10,.05);border-top:2px solid rgba(13,12,10,.35)}
+.efe-k{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#111009;margin-bottom:7px}
+.efe-tot{font-family:"Cormorant Garamond",serif;font-size:26px;font-weight:700;line-height:1;margin-bottom:10px}
+.efe-b1 .efe-tot{color:var(--red)}
+.efe-b2 .efe-tot{color:rgba(155,38,38,.65)}
+.efe-b3 .efe-tot{color:var(--green)}
+.efe-b4 .efe-tot{color:var(--sub)}
+.efe-row{display:flex;justify-content:space-between;font-size:11px;color:#0e0d0b;padding:3px 0;border-bottom:1px solid rgba(13,12,10,.06);gap:6px}
+.pos{color:var(--green)}.neg{color:var(--red)}
+
+/* ── FODA ── */
+.foda{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:3px}
+.fq{padding:16px 20px}
+.fq-f{background:rgba(23,90,49,.06);border-top:2px solid var(--green)}
+.fq-d{background:rgba(155,38,38,.06);border-top:2px solid var(--red)}
+.fq-o{background:rgba(168,123,10,.06);border-top:2px solid var(--gold)}
+.fq-a{background:rgba(155,38,38,.03);border-top:2px solid rgba(155,38,38,.3)}
+.fq-t{font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;margin-bottom:8px}
+.fq-f .fq-t{color:var(--green)}.fq-d .fq-t{color:var(--red)}.fq-o .fq-t{color:var(--gold)}.fq-a .fq-t{color:rgba(155,38,38,.7)}
+.fq-i{font-size:12px;color:#0e0d0b;padding:3px 0;border-bottom:1px solid rgba(13,12,10,.06);display:flex;gap:7px;line-height:1.35}
+.fq-i::before{content:"—";opacity:.35;flex-shrink:0}
+
+/* ── CONCLUSION ── */
+.conc-row{display:flex;gap:0;margin-top:20px}
+.conc-col{flex:1;padding:18px 20px;border-left:1px solid var(--border)}
+.conc-col:first-child{border-left:2px solid var(--gold)}
+.conc-h{font-family:"Cormorant Garamond",serif;font-size:20px;font-weight:600;color:var(--ink);margin-bottom:8px}
+.conc-txt{font-size:13px;color:#0e0d0b;line-height:1.8}
+.conc-txt strong{color:var(--ink);font-weight:500}
+.quote-block{border-left:2px solid var(--gold);padding:15px 20px;background:rgba(168,123,10,.07);margin-top:22px}
+.quote-text{font-family:"Cormorant Garamond",serif;font-size:20px;font-style:italic;color:var(--ink);line-height:1.6}
+
+/* ── PN TABLE ── */
+.pnt{width:100%;border-collapse:collapse;font-size:10.5px}
+.pnt th{text-align:right;padding:7px 5px;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#111009;border-bottom:1px solid rgba(168,123,10,.4);font-weight:400}
+.pnt th:first-child{text-align:left}
+.pnt td{padding:7px 5px;text-align:right;color:#1a1816;border-bottom:1px solid rgba(13,12,10,.04);font-family:"DM Mono",monospace;font-size:10px}
+.pnt td:first-child{text-align:left;font-family:"DM Sans",sans-serif;color:var(--ink);font-size:11.5px}
+.pnt tr:last-child td{color:var(--gold);font-weight:500;border-top:1px solid rgba(168,123,10,.25)}
+
+/* ── CASH ARROW ── */
+.cash-arrow{display:flex;align-items:center;gap:14px;padding:16px 20px;background:rgba(155,38,38,.07);border-left:2px solid var(--red);margin-top:18px}
+.cash-v{font-family:"Cormorant Garamond",serif;font-size:30px;font-weight:700;line-height:1}
+.cash-lbl{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#111009;margin-bottom:4px}
+.arrowl{flex:1;height:2px;background:linear-gradient(90deg,rgba(155,38,38,.2),rgba(155,38,38,.55));position:relative}
+.arrowl::after{content:"▶";position:absolute;right:-8px;top:50%;transform:translateY(-50%);color:rgba(155,38,38,.65);font-size:10px}
+
+/* ── TEAM ── */
+.team-name{font-size:15px;color:#0a0908;padding:8px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.team-name::before{content:"";width:3px;height:3px;border-radius:50%;background:var(--gold);flex-shrink:0}
+.til{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:3px}
+.tiv{font-size:14.5px;color:#0a0908}
+</style>
+</head>
+<body>
+<div id="deck">
+
+<!-- ══ 00 EQUIPO ══ -->
+<div class="slide" id="s0">
+  <div class="sn">00 / 14</div>
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:36px;padding:56px 72px">
+    <div class="a" data-i="0">
+      <img src="data:image/png;base64,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" alt="UADE" style="height:60px;object-fit:contain;mix-blend-mode:multiply">
+    </div>
+    <div class="a" data-i="1" style="text-align:center">
+      <div class="kicker" style="margin-bottom:10px">Contabilidad Gerencial · Intensiva Verano · 2026</div>
+      <div class="display" style="font-size:clamp(32px,3.8vw,48px)">Análisis Financiero<br><em>Papel Prensa S.A.</em></div>
+    </div>
+    <div class="a" data-i="2" style="display:grid;grid-template-columns:1fr 1fr;gap:40px;width:100%;max-width:820px">
+      <div>
+        <div class="kicker-g kicker" style="margin-bottom:12px">Integrantes del equipo</div>
+        <div class="team-name">Tomas Rotllant</div>
+        <div class="team-name">Lautaro Guardiano</div>
+        <div class="team-name">Carlos Marinaro</div>
+        <div class="team-name">Ramiro Rey</div>
+        <div class="team-name">Santiago Questa</div>
+        <div class="team-name">Martin Svetlize</div>
+        <div class="team-name">Malena Pont</div>
+      </div>
+      <div style="padding:22px 24px;background:rgba(168,123,10,.07);border-left:2px solid var(--gold);display:flex;flex-direction:column;gap:14px">
+        <div><div class="til">Docente</div><div class="tiv">Lucero Victor Adrian</div></div>
+        <div style="height:1px;background:var(--border)"></div>
+        <div><div class="til">Modalidad</div><div class="tiv">Intensiva · Verano</div></div>
+        <div style="height:1px;background:var(--border)"></div>
+        <div><div class="til">Año</div><div class="tiv">2026</div></div>
+        <div style="height:1px;background:var(--border)"></div>
+        <div><div class="til">Materia</div><div class="tiv">Contabilidad Gerencial</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 01 PORTADA ══ -->
+<div class="slide l-cover" id="s1">
+  <div class="topbar"></div>
+  <div class="sn">01 / 14</div>
+  <div class="cover-bg">24</div>
+  <div class="cover-inner">
+    <div class="kicker kicker-g a" data-i="0" style="margin-bottom:24px">Análisis Financiero Integral · Contabilidad Gerencial · UADE</div>
+    <h1 class="display a" data-i="1" style="font-size:clamp(70px,9.5vw,124px);margin-bottom:14px">Papel<br><em>Prensa</em><br>S.A.</h1>
+    <p class="body-t a" data-i="2" style="max-width:420px;margin-bottom:40px">Estado de situación al 31 de diciembre de 2024.<br>Una empresa en la encrucijada del mercado de medios.</p>
+    <div class="a" data-i="3" style="display:flex;gap:2px">
+      <div style="padding:12px 18px;background:rgba(168,123,10,.09);border:1px solid rgba(168,123,10,.2)">
+        <div class="kicker" style="margin-bottom:4px">Ventas netas</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--gold)">$106,3M</div>
+      </div>
+      <div style="padding:12px 18px;background:rgba(168,123,10,.09);border:1px solid rgba(168,123,10,.2)">
+        <div class="kicker" style="margin-bottom:4px">Patrimonio neto</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--gold)">$79,0M</div>
+      </div>
+      <div style="padding:12px 18px;background:rgba(23,90,49,.08);border:1px solid rgba(23,90,49,.2)">
+        <div class="kicker" style="margin-bottom:4px">Resultado ejercicio</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--green)">$412.195</div>
+      </div>
+      <div style="padding:12px 18px;background:var(--faint);border:1px solid var(--border)">
+        <div class="kicker" style="margin-bottom:4px">Cierre fiscal</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--ink)">31-12-2024</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 02 VENTAS ══ -->
+<div class="slide l-story l-6040" id="s2">
+  <div class="sn">02 / 14</div>
+  <div class="left">
+    <div class="kicker a" data-i="0">Estado de Resultados · 2024 vs 2023</div>
+    <div class="rule a" data-i="1"></div>
+    <h2 class="display a" data-i="2" style="font-size:clamp(40px,4.5vw,56px);margin-bottom:16px">Las ventas<br>cayeron un <em>tercio</em><br>en un año.</h2>
+    <p class="body-t a" data-i="3">Papel Prensa facturó <strong>$106.333.756</strong> en 2024, un 33,4% menos que en 2023. La caída no es un tropiezo puntual: es la expresión numérica del declive estructural del mercado de papel prensa, atado a la circulación de diarios impresos que cae año tras año sin señales de reversión.</p>
+    <div class="stats a" data-i="4">
+      <div class="stat">
+        <div class="sl">Ventas 2023</div>
+        <div class="sv" style="color:var(--sub);font-size:19px;text-decoration:line-through">$159,7M</div>
+      </div>
+      <div class="stat"><div class="sl">Ventas 2024</div><div class="sv g" data-cu="106.3" data-fmt="mpeso1">$106,3M</div></div>
+      <div class="stat"><div class="sl">Variación</div><div class="sv r" data-cu="33.4" data-fmt="negpct1">−33,4%</div></div>
+      <div class="stat"><div class="sl">G. Bruta 2024</div><div class="sv gr" data-cu="17.6" data-fmt="mpeso1">$17,6M</div></div>
+    </div>
+  </div>
+  <div class="right">
+    <div class="kicker a" data-i="5" style="margin-bottom:16px">Comparativo 2023 vs 2024</div>
+    <div class="a" data-i="6">
+      <div style="margin-bottom:16px">
+        <div style="font-size:11.5px;color:var(--ink);font-weight:500;margin-bottom:7px">Ventas netas</div>
+        <div class="bar-meta"><span class="blbl">2023</span><span class="bval" style="color:var(--sub)">$159.650.201</span></div>
+        <div class="btrack" style="margin-bottom:3px"><div class="bfill bf-gray" data-w="100" style="opacity:.45"></div></div>
+        <div class="bar-meta"><span class="blbl" style="color:var(--red)">2024</span><span class="bval" style="color:var(--red)">$106.333.756</span></div>
+        <div class="btrack"><div class="bfill bf-red" data-w="66.6"></div></div>
+      </div>
+      <div style="margin-bottom:16px">
+        <div style="font-size:11.5px;color:var(--ink);font-weight:500;margin-bottom:7px">Ganancia bruta</div>
+        <div class="bar-meta"><span class="blbl">2023</span><span class="bval" style="color:var(--sub)">$51.033.310</span></div>
+        <div class="btrack" style="margin-bottom:3px"><div class="bfill bf-gray" data-w="31.9" style="opacity:.45"></div></div>
+        <div class="bar-meta"><span class="blbl" style="color:var(--red)">2024</span><span class="bval" style="color:var(--red)">$17.648.937</span></div>
+        <div class="btrack"><div class="bfill bf-red" data-w="11.1"></div></div>
+      </div>
+      <div style="margin-bottom:16px">
+        <div style="font-size:11.5px;color:var(--ink);font-weight:500;margin-bottom:7px">Resultado operativo</div>
+        <div class="bar-meta"><span class="blbl">2023</span><span class="bval" style="color:var(--sub)">$37.262.284</span></div>
+        <div class="btrack" style="margin-bottom:3px"><div class="bfill bf-gray" data-w="23.3" style="opacity:.45"></div></div>
+        <div class="bar-meta"><span class="blbl" style="color:var(--red)">2024</span><span class="bval" style="color:var(--red)">$6.093.742</span></div>
+        <div class="btrack"><div class="bfill bf-red" data-w="3.8"></div></div>
+      </div>
+      <div>
+        <div style="font-size:11.5px;color:var(--ink);font-weight:500;margin-bottom:7px">Resultado del ejercicio</div>
+        <div class="bar-meta"><span class="blbl">2023</span><span class="bval" style="color:var(--sub)">$7.191.286</span></div>
+        <div class="btrack" style="margin-bottom:3px"><div class="bfill bf-gray" data-w="4.5" style="opacity:.45"></div></div>
+        <div class="bar-meta"><span class="blbl" style="color:var(--green)">2024</span><span class="bval" style="color:var(--green)">$412.195</span></div>
+        <div class="btrack"><div class="bfill bf-green" data-w="0.26"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 03 TRAMPA CONTABLE ══ -->
+<div class="slide l-story l-4060" id="s3">
+  <div class="sn">03 / 14</div>
+  <div class="left">
+    <div class="kicker a" data-i="0">Resultado del ejercicio · EERR Reformulado</div>
+    <div class="rule a" data-i="1"></div>
+    <h2 class="display a" data-i="2" style="font-size:clamp(38px,4.1vw,52px);margin-bottom:16px">Cerraron en verde.<br>Pero es una<br><em>trampa contable</em>.</h2>
+    <p class="body-t a" data-i="3">El resultado fue positivo ($412.195), pero el RAI era <strong>negativo en $2.630.373</strong>. Lo que revirtió el resultado fue el impuesto a las ganancias: cuando el EBIT contable es positivo pero el resultado antes del impuesto es negativo, el impuesto actúa como <strong>crédito fiscal</strong>. Sin ese efecto, la empresa habría cerrado en rojo.</p>
+    <div class="alertbox a" data-i="4" style="margin-top:20px">
+      <strong>El resultado positivo no es señal de rentabilidad.</strong> Es la consecuencia de un mecanismo tributario excepcional que no puede sostenerse indefinidamente.
+    </div>
+  </div>
+  <div class="right">
+    <div class="kicker a" data-i="5" style="margin-bottom:14px">Cascada de resultados 2024 (EERR reformulado)</div>
+    <div class="cascade a" data-i="6">
+      <div class="cr bold"><span class="crl">Ventas netas</span><span class="crv g">106.333.756</span></div>
+      <div class="cr"><span class="crl">Costo mercadería vendida</span><span class="crv r">(88.684.819)</span></div>
+      <div class="cr bold gap"><span class="crl">Ganancia bruta</span><span class="crv">17.648.937</span></div>
+      <div class="cr"><span class="crl">Gastos de comercialización</span><span class="crv r">(5.875.549)</span></div>
+      <div class="cr"><span class="crl">Gastos de administración</span><span class="crv r">(3.480.760)</span></div>
+      <div class="cr"><span class="crl">Gastos de estructura</span><span class="crv r">(2.198.886)</span></div>
+      <div class="cr"><span class="crl">Otros ingresos y egresos netos</span><span class="crv r">(5.378.930)</span></div>
+      <div class="cr bold gap"><span class="crl">EBIT (Resultado operativo)</span><span class="crv g">714.812</span></div>
+      <div class="cr"><span class="crl">Resultados financieros y por tenencia</span><span class="crv r">(3.345.185)</span></div>
+      <div class="cr bold gap"><span class="crl" style="color:var(--red)">RAI (antes de impuesto)</span><span class="crv r">(2.630.373)</span></div>
+      <div class="cr"><span class="crl">Impuesto a las ganancias <span style="color:var(--gold);font-size:8.5px;font-weight:500">← crédito fiscal</span></span><span class="crv gr">+3.042.568</span></div>
+      <div class="cr bold gap" style="border-top:1px solid rgba(168,123,10,.3);padding-top:11px">
+        <span class="crl" style="color:var(--ink);font-size:13px">Resultado del ejercicio</span>
+        <span class="crv gr" style="font-size:14px">412.195</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 04 ESP ══ -->
+<div class="slide l-story l-4060" id="s4">
+  <div class="sn">04 / 14</div>
+  <div class="left">
+    <div class="kicker a" data-i="0">Estado de Situación Patrimonial · 31-12-2024</div>
+    <div class="rule a" data-i="1"></div>
+    <h2 class="display a" data-i="2" style="font-size:clamp(38px,4.1vw,52px);margin-bottom:16px">La base<br><em>patrimonial</em><br>es sólida.</h2>
+    <p class="body-t a" data-i="3">Activo total de <strong>$142.797.549</strong> y patrimonio neto de <strong>$78.987.906</strong>. El PN representa el 55,3% de la financiación total. Por cada $1 de pasivo corriente hay $2,26 de activo corriente disponible.</p>
+    <div class="a" data-i="4" style="margin-top:20px">
+      <div class="kicker" style="margin-bottom:10px">Estructura de financiamiento</div>
+      <div class="donut-wrap">
+        <div class="donut"></div>
+        <div>
+          <div class="dl"><div class="dlsw" style="background:var(--gold)"></div>PN: $78.987.906 (55,3%)</div>
+          <div class="dl"><div class="dlsw" style="background:var(--red)"></div>Pasivo C: $33.166.560 (23,2%)</div>
+          <div class="dl"><div class="dlsw" style="background:rgba(155,38,38,.38)"></div>Pasivo NC: $30.643.083 (21,5%)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="right">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px" class="a" data-i="5">
+      <div>
+        <div class="esp-t">Activo</div>
+        <div class="esp-sec">Corriente</div>
+        <div class="esp-r"><span class="esp-l">Efectivo y equiv.</span><span class="esp-v">569.569</span></div>
+        <div class="esp-r"><span class="esp-l">Inversiones</span><span class="esp-v">1.816.536</span></div>
+        <div class="esp-r"><span class="esp-l">Deudores comerciales</span><span class="esp-v">9.931.931</span></div>
+        <div class="esp-r"><span class="esp-l">Otros créditos</span><span class="esp-v">4.183.891</span></div>
+        <div class="esp-r"><span class="esp-l">Inventarios</span><span class="esp-v">58.504.131</span></div>
+        <div class="esp-r tot"><span class="esp-l">Total AC</span><span class="esp-v">75.006.058</span></div>
+        <div class="esp-sec" style="margin-top:10px">No corriente</div>
+        <div class="esp-r"><span class="esp-l">Inversiones</span><span class="esp-v">2.432.586</span></div>
+        <div class="esp-r"><span class="esp-l">Otros créditos</span><span class="esp-v">2.755.592</span></div>
+        <div class="esp-r"><span class="esp-l">Inventarios NC</span><span class="esp-v">13.484.046</span></div>
+        <div class="esp-r"><span class="esp-l">Prop. Inversión</span><span class="esp-v">23.038</span></div>
+        <div class="esp-r"><span class="esp-l">PP&amp;E</span><span class="esp-v">49.096.229</span></div>
+        <div class="esp-r tot"><span class="esp-l">Total ANC</span><span class="esp-v">67.791.491</span></div>
+        <div class="esp-r tot" style="border-top:1px solid var(--gold);margin-top:6px">
+          <span class="esp-l" style="color:var(--ink);font-size:11px">Total Activo</span>
+          <span class="esp-v" style="font-size:10px">142.797.549</span>
+        </div>
+      </div>
+      <div>
+        <div class="esp-t" style="color:var(--red)">Pasivo &amp; PN</div>
+        <div class="esp-sec" style="color:var(--red)">Corriente</div>
+        <div class="esp-r"><span class="esp-l">Ctas por pagar</span><span class="esp-v">22.688.769</span></div>
+        <div class="esp-r"><span class="esp-l">Préstamos</span><span class="esp-v">10.058.021</span></div>
+        <div class="esp-r"><span class="esp-l">Cargas fiscales</span><span class="esp-v">201.678</span></div>
+        <div class="esp-r"><span class="esp-l">Otros pasivos</span><span class="esp-v">218.092</span></div>
+        <div class="esp-r tot"><span class="esp-l">Total PC</span><span class="esp-v">33.166.560</span></div>
+        <div class="esp-sec" style="margin-top:10px;color:var(--red)">No corriente</div>
+        <div class="esp-r"><span class="esp-l">Provisiones</span><span class="esp-v">851.347</span></div>
+        <div class="esp-r"><span class="esp-l">Ctas por pagar</span><span class="esp-v">2.290.033</span></div>
+        <div class="esp-r"><span class="esp-l">Otros pasivos</span><span class="esp-v">27.501.703</span></div>
+        <div class="esp-r tot"><span class="esp-l">Total Pasivo</span><span class="esp-v">63.809.643</span></div>
+        <div class="esp-r tot" style="border-top:1px solid var(--gold);margin-top:6px">
+          <span class="esp-l" style="color:var(--gold);font-size:11px">Patrim. Neto</span>
+          <span class="esp-v" style="font-size:10px;color:var(--gold)">78.987.906</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 05 RENTABILIDAD ══ -->
+<div class="slide l-story l-6040" id="s5">
+  <div class="sn">05 / 14</div>
+  <div class="left">
+    <div class="kicker a" data-i="0">Indicadores Económicos · Rentabilidad</div>
+    <div class="rule a" data-i="1"></div>
+    <div class="a" data-i="2" style="font-family:'Cormorant Garamond',serif;font-size:clamp(78px,11vw,138px);font-weight:700;line-height:.88;color:var(--red);margin-bottom:12px" data-cu="0.5235" data-fmt="pct2">0,52%</div>
+    <h2 class="display a" data-i="3" style="font-size:clamp(26px,3vw,38px);margin-bottom:16px">Es el retorno sobre<br>el <em>patrimonio neto</em>.<br>Casi nulo.</h2>
+    <p class="body-t a" data-i="4">Por cada $100 invertidos, el accionista recuperó $0,52. El ROA (RIT) es aún más bajo: <strong>0,28%</strong>. El único indicador relativamente sano es la rotación del activo (0,73): la empresa mueve el inventario, pero los márgenes son tan finos que no alcanza.</p>
+    <div class="stats a" data-i="5">
+      <div class="stat"><div class="sl">RPN (ROE)</div><div class="sv r" data-cu="0.5235" data-fmt="pct2">0,52%</div></div>
+      <div class="stat"><div class="sl">RIT (ROA)</div><div class="sv r" data-cu="0.2810" data-fmt="pct2">0,28%</div></div>
+      <div class="stat"><div class="sl">Mg / Ventas</div><div class="sv r" data-cu="0.3876" data-fmt="pct2">0,39%</div></div>
+      <div class="stat"><div class="sl">Rot. Activo</div><div class="sv g" data-cu="0.7250" data-fmt="plain2">0,73</div></div>
+    </div>
+  </div>
+  <div class="right">
+    <div class="kicker a" data-i="6" style="margin-bottom:16px">Rentabilidad 2023 vs 2024 (misma escala)</div>
+    <div class="a" data-i="7">
+      <div style="margin-bottom:16px">
+        <div style="font-size:11.5px;color:var(--ink);font-weight:500;margin-bottom:7px">RPN (ROE)</div>
+        <div class="bar-meta"><span class="blbl">2023</span><span class="bval" style="color:var(--sub)">9,16% <span style="font-size:10px;opacity:.6">(fuera de escala)</span></span></div>
+        <div class="btrack" style="margin-bottom:3px"><div class="bfill bf-gray" data-w="100" style="opacity:.45"></div></div>
+        <div class="bar-meta"><span class="blbl" style="color:var(--red)">2024</span><span class="bval" style="color:var(--red)">0,52%</span></div>
+        <div class="btrack"><div class="bfill bf-red" data-w="5.7"></div></div>
+      </div>
+      <div style="margin-bottom:16px">
+        <div style="font-size:11.5px;color:var(--ink);font-weight:500;margin-bottom:7px">RIT (ROA)</div>
+        <div class="bar-meta"><span class="blbl">2023</span><span class="bval" style="color:var(--sub)">4,78%</span></div>
+        <div class="btrack" style="margin-bottom:3px"><div class="bfill bf-gray" data-w="97" style="opacity:.45"></div></div>
+        <div class="bar-meta"><span class="blbl" style="color:var(--red)">2024</span><span class="bval" style="color:var(--red)">0,28%</span></div>
+        <div class="btrack"><div class="bfill bf-red" data-w="5.7"></div></div>
+      </div>
+      <div style="margin-bottom:16px">
+        <div style="font-size:11.5px;color:var(--ink);font-weight:500;margin-bottom:7px">Margen / Ventas</div>
+        <div class="bar-meta"><span class="blbl">2023</span><span class="bval" style="color:var(--sub)">4,50%</span></div>
+        <div class="btrack" style="margin-bottom:3px"><div class="bfill bf-gray" data-w="91" style="opacity:.45"></div></div>
+        <div class="bar-meta"><span class="blbl" style="color:var(--red)">2024</span><span class="bval" style="color:var(--red)">0,39%</span></div>
+        <div class="btrack"><div class="bfill bf-red" data-w="7.9"></div></div>
+      </div>
+      <div>
+        <div style="font-size:11.5px;color:var(--ink);font-weight:500;margin-bottom:7px">TFP (Costo de deuda)</div>
+        <div class="bar-meta"><span class="blbl" style="color:var(--green)">2024 — razonable ✓</span><span class="bval" style="color:var(--green)">4,93%</span></div>
+        <div class="btrack"><div class="bfill bf-green" data-w="100"></div></div>
+      </div>
+    </div>
+    <div class="alertbox a" data-i="8" style="margin-top:14px">
+      <strong>Apalancamiento: −11,89.</strong> La deuda amplifica pérdidas. El costo de financiarse supera el rendimiento de los activos.
+    </div>
+  </div>
+</div>
+
+<!-- ══ 06 DUPONT ══ -->
+<div class="slide l-full" id="s6">
+  <div class="sn">06 / 14</div>
+  <div class="a" data-i="0">
+    <div class="kicker" style="margin-bottom:9px">DuPont · Descomposición del RIT y del RPN</div>
+    <h2 class="display" style="font-size:clamp(26px,3vw,38px);margin-bottom:20px">Dos fórmulas que explican todo: <em>márgenes ínfimos</em> y deuda que destruye valor.</h2>
+  </div>
+
+  <!-- FÓRMULA 1: RIT -->
+  <div class="a" data-i="1" style="margin-bottom:6px">
+    <div class="kicker kicker-g" style="margin-bottom:8px">① Apertura del RIT (ROA)</div>
+    <div style="display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr auto 1fr auto 1fr;align-items:center">
+      <div class="dp-box dp-r"><div class="dp-l">RIT (ROA)</div><div class="dp-v" style="color:var(--red);font-size:32px" data-cu="0.2810" data-fmt="pct2">0,28%</div></div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:rgba(13,12,10,.2);text-align:center;padding:0 6px">=</div>
+      <div class="dp-box dp-r"><div class="dp-l">Mg / Ventas</div><div class="dp-v" style="color:var(--red);font-size:28px" data-cu="0.3876" data-fmt="pct2">0,39%</div></div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:rgba(13,12,10,.2);text-align:center;padding:0 6px">×</div>
+      <div class="dp-box dp-au"><div class="dp-l">Rot. Activo</div><div class="dp-v" style="color:var(--gold);font-size:28px" data-cu="0.7250" data-fmt="plain2">0,73</div></div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:rgba(13,12,10,.2);text-align:center;padding:0 6px">×</div>
+      <div class="dp-box" style="background:rgba(13,12,10,.04);border:1px solid rgba(13,12,10,.12)"><div class="dp-l">Ef. RxT</div><div class="dp-v" style="color:var(--sub);font-size:28px">1</div></div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:rgba(13,12,10,.2);text-align:center;padding:0 6px">×</div>
+      <div class="dp-box" style="background:rgba(13,12,10,.04);border:1px solid rgba(13,12,10,.12)"><div class="dp-l">Ef. RFxact</div><div class="dp-v" style="color:var(--sub);font-size:28px">1</div></div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:rgba(13,12,10,.2);text-align:center;padding:0 6px">×</div>
+      <div class="dp-box" style="background:rgba(13,12,10,.04);border:1px solid rgba(13,12,10,.12)"><div class="dp-l">Ef. RIP</div><div class="dp-v" style="color:var(--sub);font-size:28px">1</div></div>
+    </div>
+    <div style="font-size:11px;color:var(--sub);margin-top:5px;padding-left:4px">
+      Los efectos RxT, RFxact y RIP = 1 → no modifican el resultado. La RIT depende exclusivamente del margen y la rotación.
+    </div>
+  </div>
+
+  <!-- FÓRMULA 2: RPN -->
+  <div class="a" data-i="2" style="margin-bottom:10px">
+    <div class="kicker kicker-g" style="margin-bottom:8px">② De la RIT a la RPN (ROE)</div>
+    <div style="display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;align-items:center">
+      <div class="dp-box dp-r" style="border-width:2px"><div class="dp-l">RPN (ROE)</div><div class="dp-v" style="color:var(--red);font-size:32px" data-cu="0.5235" data-fmt="pct2">0,52%</div></div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:rgba(13,12,10,.2);text-align:center;padding:0 6px">=</div>
+      <div class="dp-box dp-r"><div class="dp-l">RIT (ROA)</div><div class="dp-v" style="color:var(--red);font-size:28px" data-cu="0.2810" data-fmt="pct2">0,28%</div></div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:rgba(13,12,10,.2);text-align:center;padding:0 6px">×</div>
+      <div class="dp-box dp-r"><div class="dp-l">Apalancamiento</div><div class="dp-v" style="color:var(--red);font-size:28px" data-cu="11.8857" data-fmt="neg2">−11,89</div></div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:rgba(13,12,10,.2);text-align:center;padding:0 6px">×</div>
+      <div class="dp-box" style="background:rgba(168,123,10,.07);border:1px solid rgba(168,123,10,.22)"><div class="dp-l">Efecto fiscal</div><div class="dp-v" style="color:var(--gold);font-size:28px" data-cu="0.1567" data-fmt="neg2">−0,16</div></div>
+    </div>
+    <div style="font-size:11px;color:var(--sub);margin-top:5px;padding-left:4px">
+      Verificación: 0,28% × (−11,89) × (−0,16) = <strong style="color:var(--green)">0,52% ✓</strong> · El apalancamiento negativo amplifica pérdidas, pero el efecto fiscal (negativo × negativo) revierte parcialmente el signo.
+    </div>
+  </div>
+
+  <!-- MINI RESUMEN -->
+  <div class="a" data-i="3" style="display:grid;grid-template-columns:repeat(5,1fr);gap:2px">
+    <div style="padding:11px 13px;background:rgba(23,90,49,.06);border-top:2px solid var(--green)">
+      <div class="kicker" style="color:var(--green);margin-bottom:4px">TFP</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--green)" data-cu="4.9252" data-fmt="pct2">4,93%</div>
+      <div style="font-size:11px;color:var(--body);margin-top:3px">Costo deuda razonable</div>
+    </div>
+    <div style="padding:11px 13px;background:rgba(168,123,10,.06);border-top:2px solid var(--gold)">
+      <div class="kicker" style="color:var(--gold);margin-bottom:4px">Ef. fiscal</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--gold)" data-cu="0.1567" data-fmt="neg2">−0,16</div>
+      <div style="font-size:11px;color:var(--body);margin-top:3px">Negativo × negativo = suma</div>
+    </div>
+    <div style="padding:11px 13px;background:rgba(168,123,10,.06);border-top:2px solid var(--gold)">
+      <div class="kicker" style="color:var(--gold);margin-bottom:4px">Rot. Activo</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--gold)" data-cu="0.7250" data-fmt="plain2">0,73</div>
+      <div style="font-size:11px;color:var(--body);margin-top:3px">Lo más sano del cuadro</div>
+    </div>
+    <div style="padding:11px 13px;background:rgba(155,38,38,.07);border-top:2px solid var(--red)">
+      <div class="kicker" style="color:var(--red);margin-bottom:4px">Mg / Ventas</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--red)" data-cu="0.3876" data-fmt="pct2">0,39%</div>
+      <div style="font-size:11px;color:var(--body);margin-top:3px">Principal falla del modelo</div>
+    </div>
+    <div style="padding:11px 13px;background:rgba(155,38,38,.09);border-top:2px solid var(--red)">
+      <div class="kicker" style="color:var(--red);margin-bottom:4px">Apalancamiento</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--red)" data-cu="11.8857" data-fmt="neg2">−11,89</div>
+      <div style="font-size:11px;color:var(--body);margin-top:3px">Destruye valor al endeudarse</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 07 COSTEO VARIABLE ══ -->
+<div class="slide l-story l-6040" id="s7">
+  <div class="sn">07 / 14</div>
+  <div class="left">
+    <div class="kicker a" data-i="0">Costeo Variable · Punto de equilibrio</div>
+    <div class="rule a" data-i="1"></div>
+    <div class="a" data-i="2" style="font-family:'Cormorant Garamond',serif;font-size:clamp(74px,10.5vw,122px);font-weight:700;line-height:.88;color:var(--green);margin-bottom:12px" data-cu="77.28" data-fmt="pct2">77,28%</div>
+    <h2 class="display a" data-i="3" style="font-size:clamp(26px,3vw,38px);margin-bottom:16px">El margen de<br><em>contribución</em> es<br>el único alivio.</h2>
+    <p class="body-t a" data-i="4">De cada $100 vendidos, $77,28 quedan para cubrir costos fijos. El punto de equilibrio es $52.691.756 — la empresa vendió $106.333.756, superando el PE en un <strong>50,4%</strong>. Un margen de seguridad real frente a la caída de demanda.</p>
+    <div class="stats a" data-i="5">
+      <div class="stat"><div class="sl">Contrib. Marginal</div><div class="sv gr" data-cu="82.18" data-fmt="mpeso2">$82,18M</div></div>
+      <div class="stat"><div class="sl">Total CV</div><div class="sv r" data-cu="24.15" data-fmt="mpeso2">$24,15M</div></div>
+      <div class="stat"><div class="sl">Total CF</div><div class="sv r" data-cu="40.72" data-fmt="mpeso2">$40,72M</div></div>
+      <div class="stat"><div class="sl">Punto Equilibrio</div><div class="sv g" data-cu="52.69" data-fmt="mpeso2">$52,69M</div></div>
+      <div class="stat"><div class="sl">Mg. Seguridad</div><div class="sv gr" data-cu="50.45" data-fmt="pct2">50,45%</div></div>
+    </div>
+  </div>
+  <div class="right">
+    <div class="kicker a" data-i="6" style="margin-bottom:16px">Estructura de costos y punto de equilibrio</div>
+    <div class="a" data-i="7">
+      <div class="bar-row">
+        <div class="bar-meta"><span class="blbl">CV Producción</span><span class="bval">$22.303.205</span></div>
+        <div class="btrack"><div class="bfill bf-green" data-w="21" style="opacity:.7"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-meta"><span class="blbl">CV Comercialización</span><span class="bval">$1.363.757</span></div>
+        <div class="btrack"><div class="bfill bf-green" data-w="1.3" style="opacity:.7"></div></div>
+      </div>
+      <div class="bar-row" style="margin-bottom:18px">
+        <div class="bar-meta"><span class="blbl">CV Administración + Estructura</span><span class="bval">$486.833</span></div>
+        <div class="btrack"><div class="bfill bf-green" data-w="0.5" style="opacity:.7"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-meta"><span class="blbl">CF Producción</span><span class="bval">$31.038.300</span></div>
+        <div class="btrack"><div class="bfill bf-red" data-w="29.2" style="opacity:.65"></div></div>
+      </div>
+      <div class="bar-row" style="margin-bottom:18px">
+        <div class="bar-meta"><span class="blbl">CF Comercialización + Admin + Estructura</span><span class="bval">$9.684.483</span></div>
+        <div class="btrack"><div class="bfill bf-red" data-w="9.1" style="opacity:.65"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-meta"><span class="blbl" style="color:var(--red)">Punto de equilibrio</span><span class="bval" style="color:var(--red)">$52.691.756</span></div>
+        <div class="btrack"><div class="bfill bf-red" data-w="49.6" style="opacity:.5"></div></div>
+      </div>
+      <div>
+        <div class="bar-meta" style="margin-bottom:5px"><span class="blbl" style="color:var(--green);font-weight:500">Ventas reales ✓</span><span class="bval" style="color:var(--green)">$106.333.756</span></div>
+        <div style="position:relative">
+          <div class="btrack" style="height:10px;overflow:visible">
+            <div class="bfill" data-w="100" style="background:linear-gradient(90deg,rgba(155,38,38,.45) 0% 49.6%,rgba(23,90,49,.5) 49.6% 100%)"></div>
+          </div>
+          <div style="position:absolute;top:0;left:49.6%;width:1.5px;height:100%;background:var(--ink);opacity:.35"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:3px">
+          <div style="font-size:10px;color:rgba(155,38,38,.8)">↑ PE $52,7M</div>
+          <div style="font-size:10px;color:rgba(23,90,49,.9)">Margen seguridad 50,4% →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 08 LIQUIDEZ ══ -->
+<div class="slide l-story l-6040" id="s8">
+  <div class="sn">08 / 14</div>
+  <div class="left">
+    <div class="kicker a" data-i="0">Indicadores Financieros · Liquidez y plazos</div>
+    <div class="rule a" data-i="1"></div>
+    <div class="a" data-i="2" style="font-family:'Cormorant Garamond',serif;font-size:clamp(74px,10.5vw,122px);font-weight:700;line-height:.88;color:var(--green);margin-bottom:12px" data-cu="2.2615" data-fmt="plain2">2,26</div>
+    <h2 class="display a" data-i="3" style="font-size:clamp(26px,3vw,38px);margin-bottom:16px">Son <em>solventes</em>,<br>pero cobran<br>71 días tarde.</h2>
+    <p class="body-t a" data-i="4">LCD de 2,26: por cada $1 de pasivo corriente hay $2,26 de activo. Pero el PRAC es 207,3 días y el PEPC 135,9 días — la empresa cobra <strong>71 días después</strong> del vencimiento de sus pasivos, presionando la caja.</p>
+    <div class="stats a" data-i="5">
+      <div class="stat"><div class="sl">LCD</div><div class="sv gr" data-cu="2.2615" data-fmt="plain2">2,26</div><span class="pill pill-g">solvente</span></div>
+      <div class="stat"><div class="sl">LCN</div><div class="sv g" data-cu="1.5256" data-fmt="plain2">1,53</div><span class="pill pill-au">moderada</span></div>
+      <div class="stat"><div class="sl">Endeudamiento</div><div class="sv r" data-cu="0.8078" data-fmt="plain2">0,81</div><span class="pill pill-r">riesgoso</span></div>
+      <div class="stat"><div class="sl">Fin. inmoviliz.</div><div class="sv gr" data-cu="1.1652" data-fmt="plain2">1,17</div><span class="pill pill-g">sano</span></div>
+    </div>
+  </div>
+  <div class="right">
+    <div class="kicker a" data-i="6" style="margin-bottom:16px">Plazos de cobro y pago (días)</div>
+    <div class="a" data-i="7">
+      <div style="margin-bottom:16px">
+        <div style="font-size:11.5px;color:var(--ink);font-weight:500;margin-bottom:7px">Plazos promedio (APC vs APB)</div>
+        <div class="bar-meta"><span class="blbl">APC — plazo promedio cobro</span><span class="bval">40,9 días</span></div>
+        <div class="btrack" style="margin-bottom:3px"><div class="bfill bf-gold" data-w="19.1"></div></div>
+        <div class="bar-meta"><span class="blbl" style="color:var(--green)">APB — plazo promedio pago</span><span class="bval" style="color:var(--green)">214,5 días ✓</span></div>
+        <div class="btrack"><div class="bfill bf-green" data-w="100" style="opacity:.6"></div></div>
+      </div>
+      <div>
+        <div style="font-size:11.5px;color:var(--ink);font-weight:500;margin-bottom:7px">Desfase temporal (PEPC vs PRAC)</div>
+        <div class="bar-meta"><span class="blbl" style="color:var(--gold)">PEPC — vencimiento pasivos</span><span class="bval" style="color:var(--gold)">135,9 días</span></div>
+        <div class="btrack" style="margin-bottom:3px"><div class="bfill bf-gold" data-w="63.5"></div></div>
+        <div class="bar-meta"><span class="blbl" style="color:var(--red)">PRAC — cierre efectivo cobranzas</span><span class="bval" style="color:var(--red)">207,3 días ⚠</span></div>
+        <div class="btrack"><div class="bfill" data-w="96.7" style="background:linear-gradient(90deg,var(--gold) 0% 65.7%,var(--red) 65.7% 100%)"></div></div>
+        <div style="font-size:8px;color:rgba(155,38,38,.85);margin-top:3px;text-align:right">gap: +71,4 días de retraso ⚠</div>
+      </div>
+    </div>
+    <div class="alertbox a" data-i="8" style="margin-top:14px">
+      <strong>El desfase PRAC−PEPC de 71 días</strong> explica la caída de caja a pesar de la liquidez formal cómoda.
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px" class="a" data-i="9">
+      <div style="padding:11px;background:rgba(23,90,49,.06);border-top:2px solid var(--green)">
+        <div class="kicker" style="color:var(--green);margin-bottom:4px">Cob. liquidez</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--green)" data-cu="1.4824" data-fmt="plain2">1,48</div>
+        <div style="font-size:11px;color:var(--body)">LCD/LCN — confirma solvencia</div>
+      </div>
+      <div style="padding:11px;background:rgba(23,90,49,.06);border-top:2px solid var(--green)">
+        <div class="kicker" style="color:var(--green);margin-bottom:4px">Fin. inmov.</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--green)" data-cu="1.1652" data-fmt="plain2">1,17</div>
+        <div style="font-size:11px;color:var(--body)">PN cubre el activo no corriente</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 09 EFE ══ -->
+<div class="slide l-story l-6040" id="s9">
+  <div class="sn">09 / 14</div>
+  <div class="left">
+    <div class="kicker a" data-i="0">Estado de Flujo de Efectivo · 2024</div>
+    <div class="rule a" data-i="1"></div>
+    <h2 class="display a" data-i="2" style="font-size:clamp(34px,4vw,50px);margin-bottom:16px">El efectivo<br>cayó un <em>87%</em><br>en el año.</h2>
+    <p class="body-t a" data-i="3">Arrancó 2024 con $18.485.920 y cerró con $2.386.105 (−$16.099.815). Las operaciones <strong>consumieron $15,1M</strong>. La financiación aportó +$10,7M tomando nueva deuda para cancelar deuda vieja. La posición monetaria neta absorbió $9,5M adicionales. El negocio <strong>no genera caja operativa</strong>.</p>
+    <div class="a" data-i="4" style="margin-top:20px">
+      <div class="cash-arrow">
+        <div><div class="cash-lbl">Inicio 2024</div><div class="cash-v" style="color:var(--sub)">$18,5M</div></div>
+        <div class="arrowl"></div>
+        <div style="text-align:right"><div class="cash-lbl">Cierre 2024</div><div class="cash-v" style="color:var(--red)">$2,4M</div></div>
+      </div>
+      <div style="text-align:center;margin-top:5px;font-size:9.5px;color:rgba(155,38,38,.8);letter-spacing:.07em">Variación neta: −$16.099.815 (−87%)</div>
+    </div>
+  </div>
+  <div class="right">
+    <div class="efe-grid a" data-i="5">
+      <div class="efe-b efe-b1">
+        <div class="efe-k">Operativas</div>
+        <div class="efe-tot">−$15,1M</div>
+        <div class="efe-row"><span>Cobros ventas</span><span class="pos">+131,2M</span></div>
+        <div class="efe-row"><span>Pagos proveedores</span><span class="neg">(111,5M)</span></div>
+        <div class="efe-row"><span>Personal y cargas</span><span class="neg">(18,6M)</span></div>
+        <div class="efe-row"><span>Ret. imp. ganancias</span><span class="neg">(2,0M)</span></div>
+        <div class="efe-row"><span>Otros impuestos</span><span class="neg">(14,4M)</span></div>
+        <div class="efe-row"><span>Otros cobros</span><span class="pos">+0,2M</span></div>
+      </div>
+      <div class="efe-b efe-b2">
+        <div class="efe-k">Inversión</div>
+        <div class="efe-tot">−$2,2M</div>
+        <div class="efe-row"><span>Compras PP&amp;E</span><span class="neg">(6,9M)</span></div>
+        <div class="efe-row"><span>Rdto. inversiones</span><span class="pos">+4,7M</span></div>
+      </div>
+      <div class="efe-b efe-b3">
+        <div class="efe-k">Financiación</div>
+        <div class="efe-tot">+$10,7M</div>
+        <div class="efe-row"><span>Cobro préstamo</span><span class="pos">+64,0M</span></div>
+        <div class="efe-row"><span>Pago préstamos</span><span class="neg">(53,3M)</span></div>
+      </div>
+      <div class="efe-b efe-b4">
+        <div class="efe-k">Pos. monetaria</div>
+        <div class="efe-tot" style="color:var(--sub)">−$9,5M</div>
+        <div class="efe-row"><span>Ajuste inflación</span><span class="neg">(9,5M)</span></div>
+      </div>
+    </div>
+    <div class="a" data-i="6" style="margin-top:12px">
+      <div class="kicker" style="margin-bottom:9px">Flujo neto por actividad</div>
+      <div class="bar-row">
+        <div class="bar-meta"><span class="blbl" style="color:var(--red)">Operativas</span><span class="bval" style="color:var(--red)">−$15.093.063</span></div>
+        <div class="btrack"><div class="bfill bf-red" data-w="93.8" style="opacity:.65"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-meta"><span class="blbl" style="color:var(--red)">Inversión</span><span class="bval" style="color:var(--red)">−$2.182.096</span></div>
+        <div class="btrack"><div class="bfill bf-red" data-w="13.6" style="opacity:.5"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-meta"><span class="blbl" style="color:var(--green)">Financiación</span><span class="bval" style="color:var(--green)">+$10.683.610</span></div>
+        <div class="btrack"><div class="bfill bf-green" data-w="66.5"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-meta"><span class="blbl" style="color:var(--sub)">Pos. monetaria neta</span><span class="bval" style="color:var(--sub)">−$9.508.266</span></div>
+        <div class="btrack"><div class="bfill bf-gray" data-w="59.2" style="opacity:.5"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 10 EEVPN ══ -->
+<div class="slide l-story l-6040" id="s10">
+  <div class="sn">10 / 14</div>
+  <div class="left">
+    <div class="kicker a" data-i="0">Evolución del Patrimonio Neto</div>
+    <div class="rule a" data-i="1"></div>
+    <h2 class="display a" data-i="2" style="font-size:clamp(36px,4vw,50px);margin-bottom:16px">El PN <em>resistió</em>.<br>Creció $490.767,<br>apenas un 0,62%.</h2>
+    <p class="body-t a" data-i="3">El PN pasó de $78.497.139 a $78.987.906. La asamblea del 24-04-24 redistribuyó los $7.191.286 de resultado anterior entre reservas legal, de acciones y de inversiones. El ejercicio 2024 aportó $412.195 de resultado y $78.572 de otros resultados integrales (ajuste AFS a VR).</p>
+    <div class="a" data-i="4" style="display:flex;align-items:flex-end;gap:14px;margin-top:20px;padding:16px 20px;background:rgba(168,123,10,.07);border-left:2px solid var(--gold)">
+      <div>
+        <div class="kicker" style="margin-bottom:5px">31-12-2023</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--sub)">$78.497.139</div>
+      </div>
+      <div style="flex:1;padding:0 10px">
+        <div style="font-size:11.5px;color:var(--green)">+ Resultado: $412.195</div>
+        <div style="font-size:11.5px;color:var(--green)">+ ORI: $78.572</div>
+      </div>
+      <div style="text-align:right">
+        <div class="kicker" style="margin-bottom:5px">31-12-2024</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--gold)">$78.987.906</div>
+      </div>
+    </div>
+  </div>
+  <div class="right">
+    <div class="kicker a" data-i="5" style="margin-bottom:11px">Estado de evolución del PN (EEVPN)</div>
+    <table class="pnt a" data-i="6">
+      <thead>
+        <tr><th style="text-align:left">Concepto</th><th>Capital</th><th>Reservas</th><th>AFS/VR</th><th>Rdos.</th><th>Total PN</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Saldo inicio</td><td>40.132.232</td><td>31.782.612</td><td>(608.991)</td><td>7.191.286</td><td>78.497.139</td></tr>
+        <tr><td>Distrib. asamblea</td><td>—</td><td>7.191.286</td><td>—</td><td>(7.191.286)</td><td>—</td></tr>
+        <tr><td>Rdo. ejercicio</td><td>—</td><td>—</td><td>—</td><td>412.195</td><td>412.195</td></tr>
+        <tr><td>Otros rdos. integ.</td><td>—</td><td>—</td><td>78.572</td><td>—</td><td>78.572</td></tr>
+        <tr><td>Saldo cierre</td><td>40.132.232</td><td>38.973.898</td><td>(530.419)</td><td>412.195</td><td>78.987.906</td></tr>
+      </tbody>
+    </table>
+    <div class="alertbox a" data-i="7" style="margin-top:16px">
+      El PN creció en valor nominal. En términos reales —ajustado por inflación— el poder adquisitivo disminuyó. El valor se preserva en papel, no en sustancia.
+    </div>
+  </div>
+</div>
+
+<!-- ══ 11 FODA ══ -->
+<div class="slide l-foda" id="s11">
+  <div class="sn">11 / 14</div>
+  <div class="a" data-i="0" style="margin-bottom:16px">
+    <div class="kicker" style="margin-bottom:7px">Análisis Estratégico</div>
+    <h2 class="display" style="font-size:clamp(30px,3.3vw,44px)">Un monopolio <em>sobre arena movediza</em>.</h2>
+  </div>
+  <div class="foda a" data-i="1">
+    <div class="fq fq-f">
+      <div class="fq-t">Fortalezas</div>
+      <div class="fq-i">Única productora nacional — monopolio de facto (~60% del mercado)</div>
+      <div class="fq-i">Infraestructura consolidada e integración vertical completa</div>
+      <div class="fq-i">Know-how de 47 años · acceso preferencial a materia prima local</div>
+      <div class="fq-i">Participación estatal (28,8%) — respaldo institucional</div>
+      <div class="fq-i">Ventajas de costos frente a la importación</div>
+    </div>
+    <div class="fq fq-d">
+      <div class="fq-t">Debilidades</div>
+      <div class="fq-i">Dependencia total de un mercado en declive irreversible</div>
+      <div class="fq-i">Producto único — sin diversificación de portafolio</div>
+      <div class="fq-i">75% de ventas concentradas en solo 2 clientes</div>
+      <div class="fq-i">Historia controversial — imagen pública negativa persistente</div>
+      <div class="fq-i">Tecnología de 1978 · costos energéticos y laborales elevados</div>
+    </div>
+    <div class="fq fq-o">
+      <div class="fq-t">Oportunidades</div>
+      <div class="fq-i">Reconversión hacia packaging y papel tissue sin inversión greenfield</div>
+      <div class="fq-i">Exportación regional al Mercosur</div>
+      <div class="fq-i">Economía circular · certificaciones de sostenibilidad</div>
+      <div class="fq-i">Capacidad ociosa instalada disponible para reconvertir</div>
+      <div class="fq-i">Alianzas estratégicas para acelerar la transformación</div>
+    </div>
+    <div class="fq fq-a">
+      <div class="fq-t">Amenazas</div>
+      <div class="fq-i">Declive irreversible de la circulación de diarios impresos</div>
+      <div class="fq-i">Digitalización acelerada del consumo de medios</div>
+      <div class="fq-i">Importaciones con arancel 0% · competencia sin barreras</div>
+      <div class="fq-i">Crisis económica argentina · caída de inversión publicitaria</div>
+      <div class="fq-i">Costos energéticos crecientes · posibles presiones antimonopolio</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 12 CONCLUSIÓN ══ -->
+<div class="slide l-concl" id="s12">
+  <div class="sn">12 / 14</div>
+  <div class="a" data-i="0">
+    <div class="kicker" style="margin-bottom:8px">Conclusión · Análisis integral · 2024</div>
+    <h2 class="display" style="font-size:clamp(38px,5vw,64px);margin-bottom:4px">Transformarse<br>o <em>perecer</em>.</h2>
+  </div>
+  <div class="conc-row a" data-i="1">
+    <div class="conc-col">
+      <div class="conc-h">Hoy es viable</div>
+      <div class="conc-txt">Papel Prensa muestra <strong>solvencia</strong> (LCD 2,26) y liquidez adecuada. El margen de contribución del 77,3% y un margen de seguridad del 50,4% dan respaldo operativo. Puede cumplir sus obligaciones. No está en peligro inmediato.</div>
+    </div>
+    <div class="conc-col">
+      <div class="conc-h">Mañana es vulnerable</div>
+      <div class="conc-txt">ROE de <strong>0,52%</strong>, apalancamiento negativo (<strong>−11,89</strong>) y ventas que cayeron un <strong>33,4%</strong> en un año revelan un modelo que no genera valor. El mercado que la sostiene se achica sin retorno posible.</div>
+    </div>
+    <div class="conc-col">
+      <div class="conc-h">El único camino</div>
+      <div class="conc-txt">Diversificación hacia <strong>packaging o tissue</strong>, exportaciones regionales, aprovechamiento de la capacidad ociosa. La infraestructura y el know-how existen. Solo falta la decisión estratégica.</div>
+    </div>
+  </div>
+  <div class="quote-block a" data-i="2">
+    <div class="quote-text">"Tiene la fortaleza de un monopolio y la fragilidad de quien depende de un producto que el mundo abandona. Transformarse no es una opción — es la condición de supervivencia."</div>
+  </div>
+</div>
+
+<!-- ══ 13 CIERRE ══ -->
+<div class="slide l-cover" id="s13">
+  <div class="topbar"></div>
+  <div class="sn">13 / 14</div>
+  <div class="cover-bg" style="font-size:clamp(130px,18vw,240px)">FIN</div>
+  <div class="cover-inner">
+    <div class="a" data-i="0" style="margin-bottom:24px">
+      <img src="data:image/png;base64,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" alt="UADE" style="height:52px;object-fit:contain;mix-blend-mode:multiply">
+    </div>
+    <div class="kicker kicker-g a" data-i="1" style="margin-bottom:22px">Contabilidad Gerencial · UADE · 2026</div>
+    <h1 class="display a" data-i="2" style="font-size:clamp(52px,6.5vw,84px);margin-bottom:14px">Papel Prensa <em>S.A.</em></h1>
+    <p class="body-t a" data-i="3" style="max-width:480px">EERR · ESP · Indicadores Económicos · Indicadores Financieros<br>Costeo Variable · EFE · EEVPN · Análisis FODA · Conclusión</p>
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<div id="nav">
+  <button class="nb" id="bp" onclick="go(-1)">←</button>
+  <div class="dots" id="dots"></div>
+  <div id="nc">1 / 14</div>
+  <button class="nb" id="bn" onclick="go(1)">→</button>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// EASING
+// ═══════════════════════════════════════════
+function easeOut(t){ return 1-Math.pow(1-t,3); }
+
+// ═══════════════════════════════════════════
+// FORMAT
+// ═══════════════════════════════════════════
+function fmtCU(val,fmt){
+  var d=parseInt(fmt.slice(-1))||2;
+  var s=val.toFixed(d).replace('.',',');
+  if(fmt.indexOf('negpct')===0) return '\u2212'+s+'%';
+  if(fmt.indexOf('pct')===0)    return s+'%';
+  if(fmt.indexOf('neg')===0)    return '\u2212'+s;
+  if(fmt.indexOf('mpeso')===0) return '$'+s+'M';
+  return s;
+}
+
+// ═══════════════════════════════════════════
+// COUNTUP — pure JS, no CSS tricks
+// ═══════════════════════════════════════════
+function runCountUp(el){
+  var target=parseFloat(el.getAttribute('data-cu'));
+  var fmt=el.getAttribute('data-fmt')||'plain2';
+  var delay=parseInt((el.closest('[data-i]')||{}).getAttribute('data-i')||0)*120+220;
+  var dur=1100;
+  // set to zero immediately
+  el.textContent=fmtCU(0,fmt);
+  setTimeout(function(){
+    var start=null;
+    function step(ts){
+      if(!start) start=ts;
+      var p=Math.min((ts-start)/dur,1);
+      el.textContent=fmtCU(target*easeOut(p),fmt);
+      if(p<1) requestAnimationFrame(step);
+      else el.textContent=fmtCU(target,fmt);
+    }
+    requestAnimationFrame(step);
+  },delay);
+}
+
+function runAllCountUps(slide){
+  var els=slide.querySelectorAll('[data-cu]');
+  for(var i=0;i<els.length;i++) runCountUp(els[i]);
+}
+
+// ═══════════════════════════════════════════
+// BARS — pure JS width animation, no CSS var
+// ═══════════════════════════════════════════
+function animateBars(slide){
+  var fills=slide.querySelectorAll('.bfill[data-w]');
+  for(var i=0;i<fills.length;i++){
+    (function(fill){
+      var targetW=parseFloat(fill.getAttribute('data-w'));
+      var delay=300;
+      var dur=900;
+      fill.style.width='0%';
+      setTimeout(function(){
+        var start=null;
+        function step(ts){
+          if(!start) start=ts;
+          var p=Math.min((ts-start)/dur,1);
+          fill.style.width=(targetW*easeOut(p))+'%';
+          if(p<1) requestAnimationFrame(step);
+          else fill.style.width=targetW+'%';
+        }
+        requestAnimationFrame(step);
+      },delay);
+    })(fills[i]);
+  }
+}
+
+// ═══════════════════════════════════════════
+// SLIDE ENTRY ANIMATIONS
+// ═══════════════════════════════════════════
+function revealSlide(slide){
+  var els=slide.querySelectorAll('.a');
+  for(var i=0;i<els.length;i++){
+    els[i].classList.remove('show');
+  }
+  // stagger reveals
+  var seen=[];
+  els.forEach(function(el){
+    var di=parseInt(el.getAttribute('data-i')||0);
+    if(seen.indexOf(di)===-1) seen.push(di);
+  });
+  seen.sort(function(a,b){return a-b;});
+  seen.forEach(function(di){
+    var group=slide.querySelectorAll('.a[data-i="'+di+'"]');
+    setTimeout(function(){
+      group.forEach(function(g){g.classList.add('show');});
+    },80+di*130);
+  });
+}
+
+// ═══════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════
+var slides=document.querySelectorAll('.slide');
+var N=slides.length;
+var cur=0;
+var busy=false;
+
+// Build dots
+var dotsEl=document.getElementById('dots');
+for(var i=0;i<N;i++){
+  (function(idx){
+    var d=document.createElement('div');
+    d.className='dot'+(idx===0?' on':'');
+    d.onclick=function(){go(idx-cur);};
+    dotsEl.appendChild(d);
+  })(i);
+}
+
+function sync(){
+  var ds=document.querySelectorAll('.dot');
+  for(var i=0;i<ds.length;i++) ds[i].classList.toggle('on',i===cur);
+  document.getElementById('nc').textContent=(cur+1)+' / '+N;
+  document.getElementById('bp').disabled=(cur===0);
+  document.getElementById('bn').disabled=(cur===N-1);
+}
+
+function go(dir){
+  var nx=cur+dir;
+  if(nx<0||nx>=N||busy) return;
+  busy=true;
+  slides[cur].classList.remove('active');
+  cur=nx;
+  slides[cur].classList.add('active');
+  sync();
+  revealSlide(slides[cur]);
+  animateBars(slides[cur]);
+  runAllCountUps(slides[cur]);
+  setTimeout(function(){busy=false;},400);
+}
+
+// keyboard
+document.addEventListener('keydown',function(e){
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '){e.preventDefault();go(1);}
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();go(-1);}
+});
+
+// touch
+var tx=0;
+document.addEventListener('touchstart',function(e){tx=e.touches[0].clientX;},{passive:true});
+document.addEventListener('touchend',function(e){
+  var dx=e.changedTouches[0].clientX-tx;
+  if(Math.abs(dx)>45) go(dx<0?1:-1);
+});
+
+// BOOT
+slides[0].classList.add('active');
+sync();
+setTimeout(function(){
+  revealSlide(slides[0]);
+  animateBars(slides[0]);
+  runAllCountUps(slides[0]);
+},120);
+</script>
+</body>
+</html>
